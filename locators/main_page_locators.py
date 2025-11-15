@@ -8,7 +8,10 @@ class MainPageLocators:
     BASKET_COMPONENT = (By.XPATH, "//main//section[contains(@class,'BurgerConstructor_basket')]")
     CONSTRUCTOR_ITEMS_LIST = (By.XPATH, "//ul[contains(@class,'BurgerConstructor_basket__list')]")
     INGREDIENT_DETAILS_HEADER = (By.XPATH, "//h2[contains(@class,'Modal_modal__title') and text()='Детали ингредиента']")
-    INGREDIENT_COUNTER = (By.XPATH, "//p[contains(@class,'counter_counter__num')]")
+    ORDER_MODAL_HEADER = (By.XPATH, "//div[contains(@class,'Modal_modal__contentBox')]//p[text()='идентификатор заказа']")
+    ORDER_MODAL_ID = (By.XPATH, "//h2[contains(@class,'Modal_modal__title')]")
+    LOGIN_BTN = (By.XPATH, "//button[text()='Войти в аккаунт']")
+    ORDER_BUTTON = (By.XPATH, "//button[text()='Оформить заказ']")
     
     @staticmethod
     def get_ingredient_locator_by_name(ingredient_name):

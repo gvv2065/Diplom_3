@@ -13,7 +13,7 @@ class MainPage(BasePage):
     
     @allure.step('Нажимаем в заголовке Лента Заказов')
     def click_feed_btn_header(self):
-        self._find_clickable_element(MainPageLocators.FEED_BUTTON).click()
+        self.click_on_element(MainPageLocators.FEED_BUTTON)
         return self
     
     @allure.step('Нажимаем на ингредиент')
@@ -41,14 +41,26 @@ class MainPage(BasePage):
             MainPageLocators.get_ingredient_draggable_locator_by_name(ingredient_name),
             MainPageLocators.CONSTRUCTOR_ITEMS_LIST
         )
+
+    @allure.step('Создаем заказ из списка ингредиентов')
+    def create_order(self, ingredients: list[str]):
+        for ingredient in ingredients:
+            self.add_ingredient_to_basket(ingredient)
+        self.click_on_element(MainPageLocators.ORDER_BUTTON)
+    
+    @allure.step('Получаем ID созданного заказа')
+    def get_order_id(self):
+        self._is_element_present(MainPageLocators.ORDER_MODAL_HEADER)
+        self.is_loading_modal_not_present()
+        return self._find_element(MainPageLocators.ORDER_MODAL_ID).text
         
-    @allure.step('Получаем количество ингредиента в счётчике')
-    def get_ingredient_count(self, ingredient_name):
+    
+    def _get_ingredient_count(self, ingredient_name):
         return int(self._find_element(MainPageLocators.get_ingredient_count(ingredient_name)).text)
     
     @allure.step('Проверяем количество ингредиента в счётчике')
     def assert_ingredient_counter(self, ingredient_name, expected_count):
-        actual_count = self.get_ingredient_count(ingredient_name)
+        actual_count = self._get_ingredient_count(ingredient_name)
         assert expected_count == actual_count
         
     

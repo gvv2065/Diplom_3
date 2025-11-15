@@ -12,7 +12,7 @@ class FeedPage(BasePage):
     
     @allure.step('Нажимаем в заголовке Конструктор')
     def click_constructor_btn_header(self):
-        self._find_clickable_element(FeedPageLocators.CONSTRUCTOR_BUTTON).click()
+        self.click_on_element(FeedPageLocators.CONSTRUCTOR_BUTTON)
         return self
             
     @allure.step('Проверяем что открыта страница Лента заказов')
@@ -20,3 +20,11 @@ class FeedPage(BasePage):
         self.assert_current_page_url(Url.FEED_PAGE)
         assert self._is_element_present(FeedPageLocators.ORDERS_FEED_COMPONENT) == True
         assert self._is_element_present(FeedPageLocators.ORDERS_DATA_COMPONENT) == True
+       
+    @allure.step('Получаем общее количество заказов') 
+    def get_total_orders_count(self):
+        return int(self._find_element(FeedPageLocators.TOTAL_ORDERS_COUNT).text)
+    
+    @allure.step('Получаем количество заказов за сегодня')
+    def get_today_orders_count(self):
+        return int(self._find_element(FeedPageLocators.TODAY_ORDERS_COUNT).text)

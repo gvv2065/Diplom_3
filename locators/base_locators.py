@@ -2,6 +2,8 @@ from selenium.webdriver.common.by import By
 
 
 class BaseLocators:
+    LOADING_MODAL = (By.XPATH, "//div[contains(@class,'Modal_modal_opened')]//img[alt='loading animation']")
+    
     @staticmethod
     def get_modal_title_locator(modal_title):
         return (By.XPATH, f"//div[contains(@class,'ModalHeader') and text()='{modal_title}']")

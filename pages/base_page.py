@@ -34,12 +34,38 @@ class BasePage:
         """
         return self._wait.until(EC.presence_of_element_located(locator))
     
+    
+    def check_element_clickable_not_overlay(self, driver, locator):
+        element = EC.element_to_be_clickable(locator)(driver)
+
+        if not element:
+            return False
+
+        is_obstructed = driver.execute_script("""
+                const element = arguments[0];
+                const rect = element.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                const topElement = document.elementFromPoint(x, y);
+                return !element.isSameNode(topElement);
+            """, element)
+
+        return element if not is_obstructed else False
+        
     @allure.step('Находим кликабельный элемент')
     def _find_clickable_element(self, locator):
         """
         Вспомогательный метод поиска кликабельного элемента
         """
         return self._wait.until(EC.element_to_be_clickable(locator))
+        
+    @allure.step('Кликаем по элементу с проверкой overlay')
+    def click_on_element(self, locator):
+        element = self._wait.until(
+            lambda driver: self.check_element_clickable_not_overlay(driver, locator)
+        )
+        element.click()
+        return self
     
     @allure.step('Элемент присутсвует на странице')
     def _is_element_present(self, locator, timeout=3):
@@ -169,3 +195,7 @@ class BasePage:
             source_element,
             target_element
         )
+        
+    @allure.step('Проверяем что модальное окно загрузки не отображается')
+    def is_loading_modal_not_present(self):
+        return self._is_element_not_present(BaseLocators.LOADING_MODAL)
