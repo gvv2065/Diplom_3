@@ -54,7 +54,6 @@ class MainPage(BasePage):
         self.click_on_element(MainPageLocators.ORDER_MODAL_HEADER)
         return self._find_element(MainPageLocators.ORDER_MODAL_ID).text
         
-    
     def _get_ingredient_count(self, ingredient_name):
         return int(self._find_element(MainPageLocators.get_ingredient_count(ingredient_name)).text)
     

@@ -12,11 +12,7 @@ class MainPageLocators:
     ORDER_MODAL_ID = (By.XPATH, "//h2[contains(@class,'Modal_modal__title')]")
     LOGIN_BTN = (By.XPATH, "//button[text()='Войти в аккаунт']")
     ORDER_BUTTON = (By.XPATH, "//button[text()='Оформить заказ']")
-    
-    @staticmethod
-    def get_ingredient_locator_by_name(ingredient_name):
-        return (By.XPATH, f"//p[contains(@class,'BurgerIngredient_ingredient') and text()='{ingredient_name}']")
-    
+        
     @staticmethod
     def get_ingredient_count(ingredient_name):
         return (By.XPATH, f"//p[contains(@class,'BurgerIngredient_ingredient') and text()='{ingredient_name}']//ancestor::a//p[contains(@class,'counter_counter__num')]")
