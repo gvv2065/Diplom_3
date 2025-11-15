@@ -51,7 +51,7 @@ class MainPage(BasePage):
     @allure.step('Получаем ID созданного заказа')
     def get_order_id(self):
         self._is_element_present(MainPageLocators.ORDER_MODAL_HEADER)
-        self.is_loading_modal_not_present()
+        self.click_on_element(MainPageLocators.ORDER_MODAL_HEADER)
         return self._find_element(MainPageLocators.ORDER_MODAL_ID).text
         
     

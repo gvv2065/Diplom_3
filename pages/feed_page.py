@@ -28,3 +28,8 @@ class FeedPage(BasePage):
     @allure.step('Получаем количество заказов за сегодня')
     def get_today_orders_count(self):
         return int(self._find_element(FeedPageLocators.TODAY_ORDERS_COUNT).text)
+    
+    @allure.step('Получаем ID заказов по статусу')
+    def get_orders_ids_by_status(self, status):
+        order_elements = self._find_elements(FeedPageLocators.get_orders_ids_by_status_locator(status))
+        return [element.text for element in order_elements]
