@@ -18,5 +18,5 @@ class FeedPage(BasePage):
     @allure.step('Проверяем что открыта страница Лента заказов')
     def assert_page_is_loaded(self):
         self.assert_current_page_url(Url.FEED_PAGE)
-        self._is_element_present(FeedPageLocators.ORDERS_FEED_COMPONENT)
-        self._is_element_present(FeedPageLocators.ORDERS_DATA_COMPONENT)
+        assert self._is_element_present(FeedPageLocators.ORDERS_FEED_COMPONENT) == True
+        assert self._is_element_present(FeedPageLocators.ORDERS_DATA_COMPONENT) == True

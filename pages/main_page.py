@@ -16,12 +16,39 @@ class MainPage(BasePage):
         self._find_clickable_element(MainPageLocators.FEED_BUTTON).click()
         return self
     
+    @allure.step('Нажимаем на ингредиент')
+    def click_ingredient(self, ingredient_name):
+        locator = MainPageLocators.get_ingredient_draggable_locator_by_name(ingredient_name)
+        self._scroll_to_element(locator)
+        self._find_clickable_element(locator).click()
+        return self
+    
     @allure.step('Проверяем что открыта Главная страница')
     def assert_page_is_loaded(self):
         self.assert_current_page_url(Url.MAIN_PAGE)
-        self._is_element_present(MainPageLocators.HEADER)
-        self._is_element_present(MainPageLocators.INGREDIENT_COMPONENT)
-        self._is_element_present(MainPageLocators.BASKET_COMPONENT)
+        assert self._is_element_present(MainPageLocators.HEADER) == True
+        assert self._is_element_present(MainPageLocators.INGREDIENT_COMPONENT) == True
+        assert self._is_element_present(MainPageLocators.BASKET_COMPONENT) == True
+    
+    @allure.step('Проверяем что отображается попап Детали ингредиента')    
+    def assert_ingredient_modal_is_displayed(self):
+        assert self._is_element_present(MainPageLocators.INGREDIENT_DETAILS_HEADER) == True
         
 
+    @allure.step('Добавляем ингредиент в корзину перетаскиванием')
+    def add_ingredient_to_basket(self, ingredient_name):
+        self._drag_and_drop(
+            MainPageLocators.get_ingredient_draggable_locator_by_name(ingredient_name),
+            MainPageLocators.CONSTRUCTOR_ITEMS_LIST
+        )
+        
+    @allure.step('Получаем количество ингредиента в счётчике')
+    def get_ingredient_count(self, ingredient_name):
+        return int(self._find_element(MainPageLocators.get_ingredient_count(ingredient_name)).text)
+    
+    @allure.step('Проверяем количество ингредиента в счётчике')
+    def assert_ingredient_counter(self, ingredient_name, expected_count):
+        actual_count = self.get_ingredient_count(ingredient_name)
+        assert expected_count == actual_count
+        
     

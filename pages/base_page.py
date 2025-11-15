@@ -9,6 +9,8 @@ from selenium.common.exceptions import TimeoutException
 from locators.base_locators import BaseLocators
 from selenium.webdriver.common.keys import Keys
 import allure
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
 
 class BasePage:
     """
@@ -47,6 +49,18 @@ class BasePage:
         try:
             wait = WebDriverWait(self._driver, timeout)
             wait.until(EC.presence_of_element_located(locator))
+            return True
+        except TimeoutException:
+            return False
+        
+    @allure.step('Элемент не присутсвует на странице')
+    def _is_element_not_present(self, locator, timeout=3):
+        """
+        Проверка отсутствия элемента
+        """
+        try:
+            wait = WebDriverWait(self._driver, timeout)
+            wait.until(EC.invisibility_of_element_located(locator))
             return True
         except TimeoutException:
             return False
@@ -117,3 +131,41 @@ class BasePage:
         self._find_element(BaseLocators.get_modal_locator(modal_text))
         for button in buttons_text:
             self._find_clickable_element(BaseLocators.get_modal_button(button))
+
+    @allure.step('Закрываем модальное окно')
+    def close_modal(self, modal_title):
+        self._find_clickable_element(BaseLocators.get_modal_close_button_by_modal_title(modal_title)).click()
+        
+    @allure.step('Проверяем что модального окна нет')
+    def assert_modal_is_closed(self, name):
+        assert self._is_element_not_present(BaseLocators.get_modal_title_locator(name)) == True
+        
+    @allure.step('Перетаскиваем элемент')
+    def _drag_and_drop(self, source_locator, target_locator):
+        actions = ActionChains(self._driver)
+        self._scroll_to_element(source_locator)
+        source_element = self._find_element(source_locator)
+        target_element = self._find_element(target_locator)
+        self._driver.execute_script(
+            """
+            var source = arguments[0];
+            var target = arguments[1];
+            var evt = document.createEvent("DragEvent");
+            evt.initMouseEvent("dragstart", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            source.dispatchEvent(evt);
+            evt = document.createEvent("DragEvent");
+            evt.initMouseEvent("dragenter", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            target.dispatchEvent(evt);
+            evt = document.createEvent("DragEvent");
+            evt.initMouseEvent("dragover", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            target.dispatchEvent(evt);
+            evt = document.createEvent("DragEvent");
+            evt.initMouseEvent("drop", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            target.dispatchEvent(evt);
+            evt = document.createEvent("DragEvent");
+            evt.initMouseEvent("dragend", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            source.dispatchEvent(evt);
+            """,
+            source_element,
+            target_element
+        )
