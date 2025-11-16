@@ -53,7 +53,8 @@ class MainPage(BasePage):
         self._is_element_present(MainPageLocators.ORDER_MODAL_HEADER)
         self.click_on_element(MainPageLocators.ORDER_MODAL_HEADER)
         return self._find_element(MainPageLocators.ORDER_MODAL_ID).text
-        
+    
+    @allure.step('Получаем количество ингредиента в счётчике')    
     def _get_ingredient_count(self, ingredient_name):
         return int(self._find_element(MainPageLocators.get_ingredient_count(ingredient_name)).text)
     

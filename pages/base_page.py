@@ -34,9 +34,11 @@ class BasePage:
         """
         return self._wait.until(EC.presence_of_element_located(locator))
     
+    @allure.step('Находим элементы')
     def _find_elements(self, locator):
         return self._wait.until(EC.presence_of_all_elements_located(locator))
     
+    @allure.step('Проверяем что элемент кликабелен и не перекрыт')
     def check_element_clickable_not_overlay(self, driver, locator):
         element = EC.element_to_be_clickable(locator)(driver)
 
